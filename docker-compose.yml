@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: gamevault-db
+    restart: always
+    environment:
+      POSTGRES_DB: powerup_db
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PW}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: powerup-backend
+    restart: always
+    env_file: .env
+    ports:
+      - "3001:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
